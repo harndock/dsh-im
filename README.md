@@ -120,7 +120,7 @@ dsh plugin --profile web add -w @xmanrui/dsh-im
 如需试用尚未发布到 npm 的最新代码，可以改用 GitHub 源安装器：
 
 ```sh
-npx -y github:xmanrui/dsh-im install
+npx -y github:harndock/dsh-im install
 ```
 
 GitHub 源安装会直接拉取并构建 Git 依赖；pnpm 10 及以上版本可能要求先在 profile 的 `pnpm-workspace.yaml` 中允许该依赖执行构建脚本。普通用户建议优先使用 npm 稳定版。

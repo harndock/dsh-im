@@ -1,6 +1,6 @@
 {
   "name": "@xmanrui/dsh-im",
-  "version": "4.20.2",
+  "version": "4.20.3",
   "description": "把十一种 IM 渠道和公网 AI Office 接入本机 DeepSeek Harness。 Connect eleven IM channels and a public AI Office to a local DeepSeek Harness.",
   "keywords": [
     "deepseek-harness",
@@ -74,11 +74,11 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xmanrui/dsh-im.git"
+    "url": "git+https://github.com/harndock/dsh-im.git"
   },
-  "homepage": "https://github.com/xmanrui/dsh-im#readme",
+  "homepage": "https://github.com/harndock/dsh-im#readme",
   "bugs": {
-    "url": "https://github.com/xmanrui/dsh-im/issues"
+    "url": "https://github.com/harndock/dsh-im/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -138,7 +138,8 @@
   "scripts": {
     "build": "node plugin-src/client/build.mjs && node plugin-src/host/build.mjs",
     "test": "node --test test/*.test.mjs test/channels/*/*.test.mjs",
-    "check": "npm run build && npm test && node scripts/verify-package.mjs"
+    "check": "npm run build && npm test && node scripts/verify-package.mjs",
+    "release:marketplace": "node scripts/build-marketplace-release.mjs"
   },
   "engines": {
     "node": ">=22.19"

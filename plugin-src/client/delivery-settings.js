@@ -7,8 +7,8 @@ import { h, isEnglish, localizeText } from './i18n.js';
 export const DELIVERY_RPC_CHANNEL = '/dsh-im-delivery';
 
 const DELIVERY_DOCS_URL = Object.freeze({
-  zh: 'https://github.com/xmanrui/dsh-im/blob/main/PROACTIVE_DELIVERY.md',
-  en: 'https://github.com/xmanrui/dsh-im/blob/main/PROACTIVE_DELIVERY.en.md',
+  zh: 'https://github.com/harndock/dsh-im/blob/main/PROACTIVE_DELIVERY.md',
+  en: 'https://github.com/harndock/dsh-im/blob/main/PROACTIVE_DELIVERY.en.md',
 });
 
 export const DELIVERY_ENDPOINTS = Object.freeze({

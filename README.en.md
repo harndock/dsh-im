@@ -117,7 +117,7 @@ Local `dsh web` and DSH Desktop reuse the current Host's internal services by de
 To try the latest code before it is published to npm, use the GitHub-source installer instead:
 
 ```sh
-npx -y github:xmanrui/dsh-im install
+npx -y github:harndock/dsh-im install
 ```
 
 A GitHub-source installation fetches and builds a Git dependency directly. With pnpm 10 or newer, the profile may first need an `allowBuilds` entry in `pnpm-workspace.yaml`. Most users should prefer the stable npm release.
