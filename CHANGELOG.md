@@ -6,6 +6,15 @@ This file records the notable changes in each dsh-im release. Its format follows
 
 ## [Unreleased]
 
+## [4.34.1] - 2026-10-02
+
+### Changed / 变更
+
+- Harndock fork 同步上游截至 `aa171626` 的代码，包含 4.34.0 功能、已确认机器人所有者权限修复及 Matrix 历史清理回归修复。
+  The Harndock fork incorporates upstream through `aa171626`, including 4.34.0 features, confirmed bot owner access fixes, and the Matrix history cleanup regression fix.
+- 恢复 marketplace 构建入口，发布独立签名清单与 `tar.zst` 工件；安装源、仓库和主动投递文档链接指向 Harndock fork。签名沿用开发测试键，正式 Desktop 需配置可信发布公钥。
+  Restored marketplace packaging with a separate signed manifest and `tar.zst` artifact. Installation, repository, and proactive delivery documentation links point to the Harndock fork. Signing retains the development test key; production Desktop builds require a configured trusted publisher key.
+
 ## [4.34.0] - 2026-10-01
 
 ### Added / 新增

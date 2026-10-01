@@ -1,6 +1,6 @@
 {
   "name": "@xmanrui/dsh-im",
-  "version": "4.34.0",
+  "version": "4.34.1",
   "icon": "./assets/logo-plugin-message-link-gradient.webp",
   "description": "把微信、飞书、企微、钉钉、QQ、Telegram、WhatsApp、Slack、Discord、Matrix接入DSH。 Connect Telegram, WhatsApp, Slack, Discord, Matrix, WeChat, Feishu, WeCom, DingTalk, and QQ to DSH.",
   "keywords": [
@@ -99,7 +99,8 @@
   "scripts": {
     "build": "node plugin-src/client/build.mjs && node plugin-src/host/build.mjs",
     "test": "node --test test/*.test.mjs test/channels/*/*.test.mjs",
-    "check": "npm run build && npm test && node scripts/verify-package.mjs"
+    "check": "npm run build && npm test && node scripts/verify-package.mjs",
+    "release:marketplace": "node scripts/build-marketplace-release.mjs"
   },
   "engines": {
     "node": ">=22.19"

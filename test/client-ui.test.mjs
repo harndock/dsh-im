@@ -222,7 +222,7 @@ test('IM settings renders twelve IM channels plus the AI Office connector', asyn
   ));
   assert.doesNotMatch(markup, /dim-versionTooltip|当前版本/);
   assert.doesNotMatch(markup, /dim-brandLogo|<img/);
-  assert.match(markup, /href="https:\/\/github\.com\/xmanrui\/dsh-im"/);
+  assert.match(markup, /href="https:\/\/github\.com\/harndock\/dsh-im"/);
   assert.match(markup, /target="_blank"/);
   assert.match(markup, /rel="noopener noreferrer"/);
   assert.match(markup, /aria-label="dsh-im GitHub"/);

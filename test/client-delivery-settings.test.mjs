@@ -294,7 +294,7 @@ test('expanded card more settings opens a bot-scoped page and returns in place',
   assert.equal(textOf(docsLink), '使用文档↗');
   assert.equal(
     docsLink.props.href,
-    'https://github.com/xmanrui/dsh-im/blob/main/PROACTIVE_DELIVERY.md',
+    'https://github.com/harndock/dsh-im/blob/main/PROACTIVE_DELIVERY.md',
   );
   assert.equal(docsLink.props.target, '_blank');
   assert.equal(docsLink.props.rel, 'noopener noreferrer');
@@ -1066,7 +1066,7 @@ test('recent conversation names remain platform data in the English UI', async (
   assert.equal(textOf(docsLink), 'User guide↗');
   assert.equal(
     docsLink.props.href,
-    'https://github.com/xmanrui/dsh-im/blob/main/PROACTIVE_DELIVERY.en.md',
+    'https://github.com/harndock/dsh-im/blob/main/PROACTIVE_DELIVERY.en.md',
   );
   assert.deepEqual(
     renderer.root.findAllByProps({ role: 'tab' }).map(textOf),
