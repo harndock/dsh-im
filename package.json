@@ -30,11 +30,11 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xmanrui/dsh-im.git"
+    "url": "git+https://github.com/harndock/dsh-im.git"
   },
-  "homepage": "https://github.com/xmanrui/dsh-im#readme",
+  "homepage": "https://github.com/harndock/dsh-im#readme",
   "bugs": {
-    "url": "https://github.com/xmanrui/dsh-im/issues"
+    "url": "https://github.com/harndock/dsh-im/issues"
   },
   "publishConfig": {
     "access": "public"
