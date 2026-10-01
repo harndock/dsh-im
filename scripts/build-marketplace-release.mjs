@@ -108,7 +108,7 @@ const manifest = {
   summary: 'Connect IM channels, email, and AI Office to a local DeepSeek Harness.',
   description: packageJson.description,
   harness: {
-    minVersion: '0.1.7-alpha.1',
+    minVersion: packageJson.dsh.compatibility.dsh,
   },
   runtimeApi: 1,
   platforms: ['darwin-aarch64', 'darwin-x64'],

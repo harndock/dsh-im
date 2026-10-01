@@ -259,7 +259,7 @@ Logo 由 dsh-im 的浏览器适配显示，无需修改 DSH。适配保留原始
 
 ## 本地开发
 
-最新版 dsh-im 跟随最新版 DSH，本次支持基线为 DSH `0.1.7-alpha.1`（Session 格式 v4）。后续功能和修复不再增加旧版 DSH 的兼容分支，已有其他兼容逻辑暂时保留；旧宿主请使用对应的历史插件版本。`package.json` 只声明当前实际验证的宿主版本，不承诺未经验证的未来版本。升级插件后重启 Host 并刷新设置页，使 Host 和客户端使用同一版插件。
+本 fork 的 dsh-im `4.34.2` 支持基线为 DSH `0.2.0-rc.2`（Session 格式 v4），客户端使用新版 Remote、Renderer 和 Workspace 包。旧宿主请使用对应的历史插件版本。`package.json` 只声明当前实际验证的宿主版本，不承诺未经验证的未来版本。升级插件后重启 Host 并刷新设置页，使 Host 和客户端使用同一版插件。
 
 上下文增强中的来源信息、引导词和引用回复使用 v4 的 `plugin:dsh-im` 来源字段，修复了它们触发的 `SessionFormatError: format v4 message requires a producer-owned source kind`。消息顺序、用户正文和会话级引导词去重沿用原有机制，历史会话由宿主负责迁移。
 

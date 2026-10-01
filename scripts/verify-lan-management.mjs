@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { access, mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
 import { request as httpRequest } from 'node:http';
 import { tmpdir } from 'node:os';
+import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 
@@ -13,7 +14,9 @@ if (!harnessRoot || process.argv.includes('--help')) {
   process.exit(harnessRoot ? 0 : 1);
 }
 const pluginRoot = resolve(import.meta.dirname, '..');
-const cli = resolve(harnessRoot, 'apps/cli/lib/bin.js');
+const fromHarness = createRequire(resolve(harnessRoot, 'package.json'));
+let cli = resolve(harnessRoot, 'apps/cli/lib/bin.js');
+try { await access(cli); } catch { cli = resolve(harnessRoot, 'lib/bin.js'); }
 await access(cli);
 await access(join(pluginRoot, 'lib/index.js'));
 // DSH 0.1.5 CLI intentionally permits only loopback listening. Exercise its
@@ -135,8 +138,8 @@ function expectStatus(name, response, expected, businessOk = false) {
 try {
   await mkdir(profile, { recursive: true });
   const packages = {
-    '@deepseek-ai/dsh-base': resolve(harnessRoot, 'packages/bundle/base'),
-    '@deepseek-ai/dsh-web-app': resolve(harnessRoot, 'packages/bundle/web-app'),
+    '@deepseek-ai/dsh-base': dirname(fromHarness.resolve('@deepseek-ai/dsh-base/package.json')),
+    '@deepseek-ai/dsh-web-app': dirname(fromHarness.resolve('@deepseek-ai/dsh-web-app/package.json')),
     '@xmanrui/dsh-im': pluginRoot,
   };
   for (const [name, path] of Object.entries(packages)) {

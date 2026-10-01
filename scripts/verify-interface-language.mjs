@@ -5,7 +5,7 @@
  * Mirrors scripts/verify-lan-management.mjs: an isolated, empty home, the
  * unmodified CLI, and real HTTP against the public /api carrier. Nothing is
  * mocked — the assertions are on what the Host resolves from DSH's own
- * user-settings document.
+ * profile settings.
  *
  * Set DSH_IM_TELEGRAM_TOKEN to additionally bind a real bot and assert the
  * command menu Telegram itself stores. That step is skipped without a token,
@@ -16,6 +16,7 @@ import { spawn } from 'node:child_process';
 import { access, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { request as httpRequest } from 'node:http';
 import { tmpdir } from 'node:os';
+import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 
 const harnessRoot = process.argv[2];
@@ -34,16 +35,21 @@ await access(join(pluginRoot, 'lib/index.js'));
 async function resolveHarness(root) {
   const layouts = [
     { kind: 'checkout', cli: 'apps/cli/lib/bin.js', base: 'packages/bundle/base', webApp: 'packages/bundle/web-app' },
-    { kind: 'package', cli: 'lib/bin.js', base: 'node_modules/@deepseek-ai/dsh-base', webApp: 'node_modules/@deepseek-ai/dsh-web-app' },
+    { kind: 'package', cli: 'lib/bin.js' },
   ];
   for (const layout of layouts) {
-    const paths = {
-      kind: layout.kind,
-      cli: resolve(root, layout.cli),
-      base: resolve(root, layout.base),
-      webApp: resolve(root, layout.webApp),
-    };
     try {
+      const fromHarness = createRequire(resolve(root, 'package.json'));
+      const paths = {
+        kind: layout.kind,
+        cli: resolve(root, layout.cli),
+        base: layout.kind === 'package'
+          ? dirname(fromHarness.resolve('@deepseek-ai/dsh-base/package.json'))
+          : resolve(root, layout.base),
+        webApp: layout.kind === 'package'
+          ? dirname(fromHarness.resolve('@deepseek-ai/dsh-web-app/package.json'))
+          : resolve(root, layout.webApp),
+      };
       await Promise.all([access(paths.cli), access(paths.base), access(paths.webApp)]);
       return paths;
     } catch {
@@ -55,6 +61,14 @@ async function resolveHarness(root) {
 
 const harness = await resolveHarness(harnessRoot);
 const cli = harness.cli;
+const fromHarness = createRequire(join(harness.base, 'package.json'));
+let profileSettings;
+try {
+  const editor = fromHarness.resolve('@deepseek-ai/dsh-config-editor/package.json');
+  profileSettings = createRequire(editor)('js-yaml');
+} catch (error) {
+  if (error.code !== 'MODULE_NOT_FOUND') throw error;
+}
 const botToken = process.env.DSH_IM_TELEGRAM_TOKEN;
 let telegramMenu;
 const directory = await mkdtemp(join(tmpdir(), 'dsh-im-language-test-'));
@@ -155,8 +169,19 @@ async function rpc(browser, channel, method, payload = {}) {
   return JSON.parse(response.body).result;
 }
 
-/** Rewrite only the `locale` section, leaving the rest of the document alone. */
+/** Update the locale through the release's own durable settings layout. */
 async function selectInterfaceLanguage(value) {
+  if (profileSettings) {
+    const path = join(profile, 'cordis.patch.yml');
+    let raw = '[]\n';
+    try { raw = await readFile(path, 'utf8'); }
+    catch (error) { if (error.code !== 'ENOENT') throw error; }
+    const patches = profileSettings.load(raw);
+    const withoutLocale = patches.filter(row => row.id !== 'locale');
+    if (value !== null) withoutLocale.push({ id: 'locale', config: { preference: value } });
+    await writeFile(path, profileSettings.dump(withoutLocale), 'utf8');
+    return;
+  }
   let raw = '';
   try { raw = await readFile(settingsPath, 'utf8'); } catch { raw = ''; }
   const withoutLocale = raw.replace(/(^|\n)locale:\n(?:[ \t]+.*\n?)*/g, '$1').trimEnd();
@@ -211,12 +236,16 @@ try {
     dsh: { profile: { bundles: Object.keys(packages) } },
   }));
 
-  // A Chinese interface selection, exactly as DSH's Language row stores it.
+  // A Chinese interface selection, using this release's settings layout.
   await selectInterfaceLanguage('zh');
   let browser = await login(await start());
   const language = (method, payload) => rpc(browser, 'dsh-im-language', method, payload);
 
-  const initial = await language('settings.language.get');
+  const initial = await waitFor('DSH activates its locale settings', async () => {
+    const snapshot = await language('settings.language.get');
+    assert.equal(snapshot.ok, true, JSON.stringify(snapshot));
+    return snapshot.value?.source === 'settings' ? snapshot : null;
+  });
   assert.equal(initial.ok, true, JSON.stringify(initial));
   assert.deepEqual(initial.value, { language: 'zh', tag: 'zh', source: 'settings', pinned: false },
     'the plugin must read DSH\'s own locale preference');

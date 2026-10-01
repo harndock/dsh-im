@@ -1,6 +1,6 @@
 /** Verify the built Host hook against a built DSH's real JSONL persistence. */
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { access, mkdtemp, rm } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -13,7 +13,14 @@ import {
 
 if (!process.argv[2]) throw new Error('Pass the path of a built DSH checkout.');
 const harnessRoot = resolve(process.argv[2]);
-const fromHarness = createRequire(resolve(harnessRoot, 'packages/session/session-persistence-jsonl/package.json'));
+let packagePath;
+for (const layout of ['packages/core/session/session-persistence-jsonl/package.json',
+  'packages/session/session-persistence-jsonl/package.json', 'package.json']) {
+  try { await access(resolve(harnessRoot, layout)); packagePath = resolve(harnessRoot, layout); break; }
+  catch { /* Try the next release layout. */ }
+}
+if (!packagePath) throw new Error(`No built or installed Harness found under ${harnessRoot}`);
+const fromHarness = createRequire(packagePath);
 const load = (name) => import(pathToFileURL(fromHarness.resolve(name)).href);
 const { Context } = await load('@deepseek-ai/cordis');
 const { SESSION_FORMAT_VERSION } = await load('@deepseek-ai/dsh-session');

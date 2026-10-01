@@ -256,7 +256,7 @@ Startup configuration validation failures also include `file`, `field`, and `iss
 
 ## Local development
 
-The latest dsh-im follows the latest DSH, with DSH `0.1.7-alpha.1` (Session format V4) as this update's supported baseline. New features and fixes do not add compatibility branches for older DSH versions; existing unrelated compatibility code remains in place. Older hosts should use the corresponding historical plugin release. `package.json` declares only the host versions actually verified for this build, without promising support for untested future releases. After upgrading the plugin, restart the Host and refresh the settings page so both sides use the same plugin build.
+This fork's dsh-im `4.34.2` targets DSH `0.2.0-rc.2` (Session format V4), using the current Remote, Renderer, and Workspace client packages. Older hosts should use the corresponding historical plugin release. `package.json` declares only the host versions actually verified for this build, without promising support for untested future releases. After upgrading the plugin, restart the Host and refresh the settings page so both sides use the same plugin build.
 
 Source details, guidance, and quoted replies now use the V4 `plugin:dsh-im` source kind, fixing `SessionFormatError: format v4 message requires a producer-owned source kind`. Message ordering, user text, and session-level guidance deduplication retain their existing behavior. The host owns historical Session migration.
 

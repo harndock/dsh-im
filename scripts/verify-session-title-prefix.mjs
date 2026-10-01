@@ -3,6 +3,7 @@
 // node scripts/verify-session-title-prefix.mjs /path/to/dsh [all-prompts|first-prompt]
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -12,7 +13,14 @@ if (!process.argv[2]) throw new Error('Pass the path of a built DSH checkout.');
 const root = resolve(process.argv[2]);
 const automatic = process.argv[3] ?? 'all-prompts';
 assert.ok(['all-prompts', 'first-prompt'].includes(automatic));
-const fromHarness = createRequire(resolve(root, 'packages/session/session-title/package.json'));
+let packagePath;
+for (const layout of ['packages/core/session/session-title/package.json',
+  'packages/session/session-title/package.json', 'package.json']) {
+  try { await access(resolve(root, layout)); packagePath = resolve(root, layout); break; }
+  catch { /* Try the next release layout. */ }
+}
+if (!packagePath) throw new Error(`No built or installed Harness found under ${root}`);
+const fromHarness = createRequire(packagePath);
 const load = (name) => import(pathToFileURL(fromHarness.resolve(name)).href);
 const { Context } = await load('@deepseek-ai/cordis');
 const { default: SessionStore, SessionId } = await load('@deepseek-ai/dsh-session');
